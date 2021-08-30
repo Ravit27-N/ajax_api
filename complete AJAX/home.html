@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <link rel="stylesheet" href="style.css">
+  <title>Document</title>
+</head>
+<body>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html">User Management System</a>
+
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+          </li>
+        </ul>
+     
+        <p class="space"></p>
+          <input class="form-control me-2" type="search" placeholder="Search" id="search" name="search" aria-label="Search">
+          <button class="btn btn-outline-light" id="searchbtn" type="submit">Search</button>
+          <button class="btn btn-outline-light" id="logOutbtn" type="submit">logout</button>
+       </div>
+       
+    </div>
+  </nav>
+  <!-- add button -->
+  <div class="row">
+    <div class="col-6">
+      <h1>Users</h1>
+    </div>
+    <div class="col-6 d-flex justify-content-end">
+      <a href="add_user.html" type="button" id="addbtn" class="btn btn-primary align-self-center">+ add user</a>
+    </div>
+  </div>
+  <div class="container">
+    <table class="table table-bordered">
+      <thead class="header">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Email</th>
+          <th scope="col">Phone</th>
+          <th scope="col" class="text-end">Action</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+  </div>
+
+
+
+  <!-- javascript -->
+  <script type="text/javascript">
+$("document").ready(function(){    
+      //read all data 
+      list_data();
+     
+//Search
+      $('#searchbtn').click(function(){
+        var search = $("#search").val();
+        if(search != '')
+        {
+          load_data_search(search);
+        }
+        else
+        {
+          load_data_search();
+        }
+      })  
+
+//click delete btn
+      $(document).on('click','#deletebtn',function(){
+        var id = $(this).attr('name')
+        // var link = 'http://localhost:5000/:'+id;
+        // alert(link)
+        $.ajax({
+          url:'http://localhost:5000/'+id,
+          type:"GET",
+          contentType:"application/json",
+          dataType:"json",
+          data:{'id':id},
+          success:function(res){
+              if(res.msg=="success"){
+               
+                list_data();
+              }
+              else{
+                alert("cannot delete because have some err");
+              }
+          }
+        })
+      })
+
+//click view information
+
+      $(document).on('click','#viewbtn',function(){
+        var id = $(this).attr('name')
+        localStorage.setItem('id',id);
+      })
+
+      $(document).on('click','#editbtn',function(){
+        var id = $(this).attr('name')
+        localStorage.setItem('id',id);
+      })
+
+   
+        
+
+//function read all data from database
+    function list_data(){
+          var data = {};        
+        $.ajax({
+          url: 'http://localhost:5000',     
+          type: 'GET',
+          contentType: 'application/json', 
+          data: JSON.stringify(data),
+          success: function(res) {
+            if(res.msg=='success'){
+                  $('.row_data').remove()
+                  var temp = "" 
+                $.each(res.rows,function(index,data){
+                  temp +="<tr class='row_data'>"
+                  temp +="<th scope='row' >"+ data.id +"</td>"
+                  temp +="<td>"+ data.first_name +"</td>"
+                  temp +="<td>"+ data.last_name +"</td>"
+                  temp +="<td>"+ data.email +"</td>"
+                  temp +="<td>"+ data.phone +"</td>"
+                  temp +=" <td class='text-end'>"
+                  temp += "<a href='view_detail.html' type='button' id='viewbtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye' ></i> View</a>"
+                  temp += "<a href='edit.html' type='button' id='editbtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye' ></i> Edit</a>"
+                  temp += "<a type='button' id='deletebtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye'></i> Delete</a>"
+                  temp +="</td><tr>"
+                })
+                // $("tbody").append(JSON.stringify(data));
+                $("tbody").append(temp);
+            //end success
+            }
+            else{
+              alert("some problem")
+            }
+          }
+        }); //end ajax
+      }//end function
+      //new for search
+      function load_data_search(search){     
+      // $("tbody").remove()   
+      $.ajax({
+        url: 'http://localhost:5000',     
+        type: 'POST',
+        data:{'search':search},
+        success: function(res){
+          // console.log('success');
+          // console.log(JSON.stringify(res.rows));
+          $('.row_data').remove()
+          var temp = "";
+          $.each(res.rows,function(index,data){
+            temp +="<tr class='row_data'>"
+            temp +="<th scope='row'>"+ data.id +"</td>"
+            temp +="<td>"+ data.first_name +"</td>"
+            temp +="<td>"+ data.last_name +"</td>"
+            temp +="<td>"+ data.email +"</td>"
+            temp +="<td>"+ data.phone +"</td>"
+            temp +=" <td class='text-end'>"
+            temp += "<a href='view_detail.html' type='button' id='viewbtn' name='"+data.id+"' class='btn btn-lightbtn-small' ><i class='bi bi-eye'></i> View</a>"
+            temp +="<a href='"+ data.id  +"'type='button' class='btn btn-lightbtn-small'><i class='bi bi-eye'></i>  Edit</a>"
+            temp += "<a type='button' id='deletebtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye'></i> Delete</a>"
+            temp +="</td><tr>"
+          })
+          // $("tbody").append(JSON.stringify(data));
+          $("tbody").append(temp);
+          temp=""
+        } //end success
+      }); //end ajax
+
+    }//end function
+              
+
+
+}); // end document
+  </script>
+  
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Roommate Application Form</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="from.css">
+  </head>
+  <body>
+ <!-- navbar -->
+     <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="home.html">User Management System</a>
+  
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+            </li>
+          </ul>
+          <p class="space"></p>
+            <div class="logOutbtn">
+              <button class="btn btn-outline-light" id="logOutbtn" type="submit">logout</button>
+            </div>
+         
+         </div>
+         
+      </div>
+    </nav>
+
+<!-- body -->
+    <div class="testbox">
+      <form action="/">
+        <div class="banner"> </div>
+        <div class="item">
+          <p>Name</p>
+          <div class="name-item">
+            <input type="text" id="first_name" name="first_name" placeholder="First name" value=""/>
+            <input type="text" id="last_name"  name="last_name" placeholder="Last name" value=""/>
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="item">
+            <p>Email</p>
+            <input type="text" id="email" name="email" placeholder="exmaple@gmail.com" value=""/>
+          </div>
+          <div class="item">
+            <p>Phone</p>
+            <input type="text" id="phone" name="phone" placeholder="Phone" value=""/>
+          </div>
+        </div>
+        <div class="item">
+          <p>Comment</p>
+          <input type="text" id="comments" name="comments" placeholder="leave a comment here" value=""/>
+        </div>
+
+        <div class="btn-block">
+          <button type="submit" class="submitbtn"  id="submitbtn" >Edit</button>
+        </div>
+
+      </form>
+    </div>
+
+
+    <script type="text/javascript">
+    
+ //for save when we read
+
+      $("document").ready(function(){  
+        //read old data past to input box 
+        getdata();
+
+
+
+        function getdata(){
+          var id= localStorage.getItem('id')
+          var data = {};   
+          $.ajax({
+            url: 'http://localhost:5000/edituser/'+id, 
+            type: 'GET',
+            contentType: 'application/json', 
+            data: JSON.stringify(data),
+            success: function(res) {
+              console.log('success');
+              console.log(JSON.stringify(res.rows));
+              $.each(res.rows,function(index,data){
+                  firstname = data.first_name;
+                  lastname = data.last_name;
+                  email = data.email;
+                  phone = data.phone;
+                  comments = data.comments;
+              })
+              $("#first_name").val(firstname)
+              $("#last_name").val(lastname)
+              $("#email").val(email)
+              $("#phone").val(phone)
+              $("#comments").val(comments)
+            }
+          });//end ajax
+        }//end function 
+
+        $(document).on('click','#submitbtn',function(){
+           var id= localStorage.getItem('id')
+           var first_name = $("#first_name").val()
+           var last_name = $("#last_name").val()
+           var email = $("#email").val()
+           var phone = $("#phone").val()
+           var comments = $("#comments").val()
+           $.ajax({
+            url:"http://localhost:5000/edituser/"+id,
+            method:"POST",
+            // contentType:"application/json",
+            dataType:'json',
+            data:{
+              'first_name':first_name,
+              'last_name':last_name,
+              'email':email,
+              'phone':phone,
+              'comments':comments,
+            },
+            success: function(res){
+              if(res.msg == "success"){
+                alert('task edit success');
+                //remove old data
+                getdata()
+              }else{
+                   alert('some error occurred try again');
+               }
+            } ,
+            error:function(response){
+               alert('server error occured')
+             }
+        }) //end ajax
+
+     })//end submit
+        
+    }) // end 
+    </script>
+
+  </body>
+</html>

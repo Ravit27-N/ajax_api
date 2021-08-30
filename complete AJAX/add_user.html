@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>User Management System</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="from.css">
+  </head>
+  <body>
+    <!-- navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="home.html">User Management System</a>
+  
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+            </li>
+          </ul>
+          
+         
+         </div>
+         
+      </div>
+    </nav>
+
+    <!-- input form -->
+    <div class="testbox">
+      <form action="">
+        <div class="banner">
+          <h1>Roommate Application Form</h1>
+        </div>
+        <div class="item">
+          <p>Name</p>
+          <div class="name-item">
+            <input type="text" id="first_name" name="first_name" placeholder="First name" />
+            <input type="text" id="last_name"  name="last_name" placeholder="Last name" />
+          </div>
+        </div>
+        <div class="contact-item">
+          <div class="item">
+            <p>Email</p>
+            <input type="text" id="email" name="email" placeholder="exmaple@gmail.com"/>
+          </div>
+          <div class="item">
+            <p>Phone</p>
+            <input type="text" id="phone" name="phone" placeholder="Phone"/>
+          </div>
+        </div>
+        <div class="item">
+          <p>Comment</p>
+          <input type="text" id="comments" name="comments" placeholder="leave a comment here"/>
+        </div>
+
+        <div class="btn-block">
+          <button type="submit" class="submitbtn"  id="submitbtn" >Submit</button>
+        </div>
+      </form>
+    </div>
+
+
+    <script type="text/javascript">
+      $("document").ready(function(){
+        $(".submitbtn").click(function(){
+        var first_name = $("#first_name").val()
+        var last_name = $("#last_name").val()
+        var email = $("#email").val()
+        var phone = $("#phone").val()
+        var comments = $("#comments").val()
+        $.ajax({
+            url:"http://localhost:5000/adduser",
+            method:"post",
+            // contentType:"application/json",
+            dataType:'json',
+            data:{
+              'first_name':first_name,
+              'last_name':last_name,
+              'email':email,
+              'phone':phone,
+              'comments':comments,
+            },
+            success:(function(res){
+              if(res.msg=="success"){
+                alert('task added successfully');
+                //remove old data
+                $(data).val('')
+              }else{
+                   alert('some error occurred try again');
+               }
+            }) ,
+            error:function(response){
+               alert('server error occured')
+             }
+        }) //end ajax
+      })//end submit
+    }) // end 
+    
+    </script>
+
+  </body>
+</html>
