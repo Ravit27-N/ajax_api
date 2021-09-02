@@ -1,0 +1,27 @@
+   function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+      for (i = 0; i < sURLVariables.length; i++) {
+          sParameterName = sURLVariables[i].split('=');
+
+          if (sParameterName[0] === sParam) {
+              return typeof sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+          }
+       }
+    return false;
+}//end function
+
+
+
+temp += "<a href='/viewuser/"+data.id+"' type='button' id='viewbtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye' ></i> View</a>"
+                  temp += "<a href='/edituser/"+data.id+"' type='button' id='editbtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye' ></i> Edit</a>"
+                  temp += "<a href='/api/"+data.id+"'type='button' id='deletebtn' name='"+data.id+"' class='btn btn-lightbtn-small'><i class='bi bi-eye'></i> Delete</a>"
+                  temp +="</td><tr>"
+
+
+
+
+          

@@ -1,0 +1,58 @@
+<head>
+    <link rel="stylesheet" href="./style_input.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div class="logo">
+      <img src="logo.png">
+    </div>
+    <h1>Log In</h1>
+    <form class= "form" action="/login" method="POST" >
+        <label for="user_email">Email</label>
+        <input type="email" class="input" id="email" name="email" autocomplete="off" id="user_email" placeholder="Enter your email">
+        <label for="user_pass">Password</label>
+        <input type="password" class="input"  id="password" name="password" id="user_pass" placeholder="Enter new password" >
+       
+     
+        {{#if error}}
+            <div class="err-msg">{{error}}</div>
+        {{/if}}
+
+        <input type="submit"  class="submit" id="login" value="Login">
+    
+        
+        <div class="link"><a href="./signup">Sign Up</a></div>
+        <div class="link"><a href="./changepass">Change password</a></div>
+       
+    </form>
+</div>
+
+<script >
+ $("document").ready(function(){ 
+      
+        $(document).on('click','#login',function(){
+            const user_email = $("#user_email").val();
+            const user_pass = $("#user_pass").val();
+            console.log(user_pass,user_email)
+                $.ajax({
+                    url:"http://localhost:5000/login",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                            'user_email':user_email,
+                            'user_pass':user_pass,
+                        },
+                    success: function(){
+                  
+                    } 
+                })
+            })
+        })
+    </script>
+
+</body>
+
+
+

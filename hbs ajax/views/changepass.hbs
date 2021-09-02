@@ -1,0 +1,66 @@
+
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style_input.css">
+    
+
+<div class="container">
+  <div class="logo">
+    <img src="logo.png">
+  </div>
+  <h1>Change Password</h1>
+
+  <form action="/changepass" method="POST">
+      <label for="user_email">Email</label>
+      <input type="email" class="input" name="_email" autocomplete="off" id="user_email" placeholder="Enter your email">
+
+      <label for="user_pass">Password</label>
+      <input type="password" class="input" name="_password" id="user_pass" placeholder="Enter old password">
+
+      <label for="user_pass">New password</label>
+      <input type="password" class="input" name="_new_password" id="user_new_pass" placeholder="Enter new password">
+
+      <label for="user_pass">confirm password</label>
+      <input type="password" class="input" name="_confirm_password" id="user_confirm_pass" placeholder="Enter confirm password">
+
+      {{#if msg}}
+             <div class="success-msg">{{msg}}</div>
+      {{/if}}
+      {{#if error}}
+             <div class="err-msg">{{error}}</div>
+       {{/if}}
+
+      <input type="submit" id="change_pass" value="Change Password">
+
+      <div class="link"><a href="./login">Login</a></div>
+      <div class="link"><a href="./signup">Sign Up</a></div>
+      
+  </form>
+  <script >
+ $("document").ready(function(){ 
+      
+        $(document).on('click','#change_pass',function(){
+     
+            const user_email = $("#user_email").val();
+            const user_pass = $("#user_pass").val();
+            const user_new_pass = $("#user_new_pass").val();
+            const user_confirm_pass = $("#user_confirm_pass").val();
+            console.log(email,user_pass,user_new_pass,user_confirm_pass);
+                $.ajax({
+                    url:"http://localhost:5000/changepass",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                            'user_email':user_email,
+                            'user_pass':user_pass,
+                            'user_new_pass':user_new_pass,
+                            'user_confirm_pass':user_confirm_pass,
+                        },
+                    success: function(){
+                    } 
+                })
+            })
+        })
+    </script>
+
+</div>

@@ -1,0 +1,63 @@
+
+    
+    {{!-- change --}}
+  
+    <link rel="stylesheet" href="./style_input.css">
+
+<div class="container">
+    <div class="logo">
+        <img src="logo.png">
+      </div>
+    <h1>Sign Up</h1>
+    <form action="/signup" method="POST">
+
+        <label for="user_name">Name</label>
+        <input type="text" class="input" name="name" autocomplete="off" id="user_name" placeholder="Enter your name">
+
+        <label for="user_email">Email</label>
+        <input type="email" class="input" name="email" autocomplete="off" id="user_email" placeholder="Enter your email">
+
+        <label for="user_pass">Password</label>
+        <input type="password" class="input" name="password" id="user_pass" placeholder="Enter new password">
+
+        <label for="user_pass">Confirm Password</label>
+        <input type="password" class="input" name="confirm_password" id="user_confirm_pass" placeholder="Enter confirm new password">
+
+       
+        {{#if msg}}
+             <div class="success-msg">{{msg}}</div>
+        {{/if}}
+        {{#if error}}
+             <div class="err-msg">{{error}}</div>
+        {{/if}}
+
+        <input type="submit" id="signup" value="Sign Up">
+        <div class="link"><a href="./login">Login</a></div>
+        <div class="link"><a href="./changepass">Change password</a></div>
+    </form>
+</div>
+ <script >
+ $("document").ready(function(){ 
+      
+        $(document).on('click','#signup',function(){
+            const user_name =  $("#user_name").val();
+            const user_email = $("#user_email ").val();
+            const user_pass = $("#user_pass").val();
+            const user_confirm_pass = $("#user_confirm_pass").val();
+            console.log(user_email)
+                $.ajax({
+                    url:"http://localhost:5000/signup",
+                    type:"POST",
+                    dataType:"json",
+                    data:{
+                            'user_name' : user_name ,
+                            'user_email ': user_email ,
+                            'user_pass':user_pass,
+                            'user_confirm_pass':user_confirm_pass,
+                        },
+                    success: function(){
+                    } 
+                })
+            })
+        })
+ </script>

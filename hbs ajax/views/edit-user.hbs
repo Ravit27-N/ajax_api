@@ -1,0 +1,125 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Edit User</li>
+  </ol>
+</nav>
+
+{{#if alert}}
+  <div class="alert alert-success alert-dismissible fade show" role="alert">
+    {{alert}}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{{/if}}
+
+
+
+<form class="row g-3 needs-validation">
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="first_name" value="" placeholder="First Name" name="first_name">
+      <label for="floatingInput">First Name</label>
+    </div>
+  </div>
+  <input type="hidden" id="id" value="">
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="last_name" value="" placeholder="Last Name" name="last_name">
+      <label for="floatingInput">Last Name</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="email" value="" placeholder="email@email.com" name="email">
+      <label for="floatingInput">Email</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="phone" value="" placeholder="Phone" name="phone">
+      <label for="floatingInput">Phone</label>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="form-floating mb-3">
+      <textarea class="form-control" placeholder="Leave a comment here" value="" id="comments" name="comments" style="height: 200px"></textarea>
+      <label for="comments">Comments</label>
+    </div>
+  </div>
+  <div class="col-12 d-grid">
+    <button class="btn btn-primary" id="submitbtn" type="submit">Submit</button>
+  </div>
+</form>
+
+   <script type="text/javascript">
+    
+ //for save when we read
+
+     $("document").ready(function(){  
+       
+        //read old data past to input box 
+        getdata();
+
+
+
+        function getdata(){
+          
+          var id = localStorage.getItem('id');
+          var data = {};   
+          $.ajax({
+            url: 'http://localhost:5000/api/edituser/'+id, 
+            type: 'GET',
+            contentType: 'application/json', 
+            data: JSON.stringify(data),
+            success: function(res) {
+              console.log('success');
+              console.log(JSON.stringify(res.rows));
+              const data = res.rows[0];
+              console.log(data)
+              $('#id').val(id);
+              $("#first_name").val(data.first_name)
+              $("#last_name").val( data.last_name)
+              $("#email").val( data.email)
+              $("#phone").val(data.phone)
+              $("#comments").val(data.comments)
+            }
+          });//end ajax
+        }//end function 
+
+        $(document).on('click','#submitbtn',function(){
+           var id = $("#id").val()
+           var first_name = $("#first_name").val()
+           var last_name = $("#last_name").val()
+           var email = $("#email").val()
+           var phone = $("#phone").val()
+           var comments = $("#comments").val()
+           $.ajax({
+            url:"http://localhost:5000/api/edituser/"+id,
+            method:"POST",
+            // contentType:"application/json",
+            dataType:'json',
+            data:{
+              'first_name':first_name,
+              'last_name':last_name,
+              'email':email,
+              'phone':phone,
+              'comments':comments,
+            },
+            success: function(res){
+              if(res.msg == "success"){
+                alert('task edit success');
+                //remove old data
+                getdata()
+              }else{
+                   alert('some error occurred try again');
+               }
+            } ,
+            error:function(response){
+               alert('server error occured')
+             }
+        }) //end ajax
+
+     })//end submit
+
+    }) // end 
+    </script>

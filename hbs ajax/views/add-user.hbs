@@ -1,0 +1,87 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="/">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">New User</li>
+  </ol>
+</nav>
+
+{{#if alert}}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+  {{alert}}
+  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{{/if}}
+
+<form class="row g-3 needs-validation">
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="first_name"  placeholder="First Name" name="first_name">
+      <label for="floatingInput">First Name</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="last_name" placeholder="Last Name" name="last_name">
+      <label for="floatingInput">Last Name</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="email" class="form-control" id="email"  placeholder="email@email.com" name="email">
+      <label for="floatingInput">Email</label>
+    </div>
+  </div>
+  <div class="col-6">
+    <div class="form-floating mb-3">
+      <input type="text" class="form-control" id="phone" placeholder="Phone" name="phone">
+      <label for="floatingInput">Phone</label>
+    </div>
+  </div>
+  <div class="col-12">
+    <div class="form-floating mb-3">
+      <textarea class="form-control" placeholder="Leave a comment here" id="comments" name="comments" style="height: 200px"></textarea>
+      <label for="comments">Comments</label>
+    </div>
+  </div>
+  <div class="col-12 d-grid">
+    <button class="btn btn-primary" id="submitbtn" type="submit">Submit</button>
+  </div>
+</form>
+
+   <script type="text/javascript">
+      $("document").ready(function(){
+      $(document).on("click","#submitbtn",function(){
+          
+        var first_name = $("#first_name").val()
+        var last_name = $("#last_name").val()
+        var email = $("#email").val()
+        var phone = $("#phone").val()
+        var comments = $("#comments").val()
+        
+        $.ajax({
+            url:"http://localhost:5000/api/adduser",
+            method:"post",
+            dataType:'json',
+            data:{
+              'first_name':first_name,
+              'last_name':last_name,
+              'email':email,
+              'phone':phone,
+              'comments':comments
+            },
+            success: function(res){
+              if(res.msg == "success"){
+                alert('task added successfully');
+                
+              }else{
+                alert('some error occurred try again');
+               }
+            },
+            error: function(err){
+                alert(err)
+            }
+        }) //end ajax
+      })//end submit
+    }) // end 
+    
+    </script>
